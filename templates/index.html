@@ -1,11 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TODO APP</title>
-</head>
-<body>
-{{.}}
-</body>
+  </head>
+  <body>
+    <div class="todo-container">
+      <form method="POST">
+        <input type="text" name="title" />
+        <button type="submit">Add</button>
+      </form>
+
+      <table border="1">
+        <thead>
+          <th>Tittle</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
+          {{range .mapMake}}
+          <tr>
+            <td>{{.Tittle}}</td>
+            <td>
+              <form>
+                <input name="completed" value="{{index .mapMake .ID}}" hidden />
+                <button type="submit">Completed</button>
+              </form>
+              <form>
+                <input name="completed" value="{{.ID}}" hidden />
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+    <script>
+      const form = document.getElementById("form");
+
+      var xhttp = new XMLHttpRequest();
+
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        xhttp.onreadystatechange = alertContents;
+        xhttp.open("DELETE", "index.html");
+        xhttp.send();
+      };
+
+      function alertContents() {
+        if (xhttp.readyState === XMLHttpRequest.DONE) {
+          if (xhttp.status === 200) {
+            alert("hello");
+          } else {
+            alert("There was a problem with the request.");
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
