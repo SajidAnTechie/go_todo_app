@@ -81,7 +81,7 @@ func completeTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mapMake[id[0]].Done = true
+	mapMake[id[0]].Done = !mapMake[id[0]].Done
 
 	tmp.Execute(w, mapMake)
 
