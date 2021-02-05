@@ -24,35 +24,66 @@ func init() {
 
 func main() {
 
-	http.HandleFunc("/", todos)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			tmp.Execute(w, mapMake)
+			return
+		}
+	})
+
+	http.HandleFunc("/addTodo", addTodo)
+	http.HandleFunc("/deleteTodo", deleteTodo)
+	http.HandleFunc("/completeTodo", completeTodo)
+
 	fmt.Println(http.ListenAndServe(":8000", nil))
 }
 
-func todos(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
+func addTodo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
 		tmp.Execute(w, mapMake)
 		return
 	}
 
-	switch r.Method {
-	case "POST":
+	ramdomID := randomString()
 
-		ramdomID := randomString()
-		fmt.Println(ramdomID)
+	mapMake[ramdomID] = &todo{ID: ramdomID, Title: r.FormValue("title"), Done: false}
 
-		mapMake[ramdomID] = &todo{ID: ramdomID, Title: r.FormValue("title"), Done: false}
-		fmt.Println(mapMake)
-		fmt.Println(mapMake[ramdomID])
+	tmp.Execute(w, mapMake)
 
+}
+func deleteTodo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
 		tmp.Execute(w, mapMake)
-
-	case "DELETE":
-		fmt.Println(r.FormValue("sajid"))
-		tmp.Execute(w, "DELETE")
-	default:
-		tmp.Execute(w, nil)
-
+		return
 	}
+
+	id, ok := r.URL.Query()["Id"]
+
+	if !ok || len(id[0]) < 1 {
+		fmt.Println("Url Param 'id' is missing")
+		return
+	}
+
+	delete(mapMake, id[0])
+
+	tmp.Execute(w, mapMake)
+
+}
+func completeTodo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		tmp.Execute(w, mapMake)
+		return
+	}
+	id, ok := r.URL.Query()["Id"]
+
+	if !ok || len(id[0]) < 1 {
+		fmt.Println("Url Param 'id' is missing")
+		return
+	}
+
+	mapMake[id[0]].Done = true
+
+	tmp.Execute(w, mapMake)
 
 }
 
