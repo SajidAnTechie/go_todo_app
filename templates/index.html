@@ -25,16 +25,36 @@
         <tbody>
           {{range $key, $value := .}}
           <tr>
-            {{if $value.Done}}
-            <td class="done">{{$value.Title}}</td>
-            {{else}}
-            <td>{{$value.Title}}</td>
-            {{end}}
+            <td>
+              <form
+                method="POST"
+                action="/completeTodo?Id={{$value.ID}}"
+                id="formSubmit"
+              >
+                {{if $value.Done}}
+                <input
+                  type="checkbox"
+                  name="complete"
+                  checked
+                  onchange="this.form.submit()"
+                />
+                {{else}}
+                <input
+                  type="checkbox"
+                  name="complete"
+                  onchange="this.form.submit()"
+                />
+                {{end}}
+              </form>
+
+              {{if $value.Done}}
+              <span class="done">{{$value.Title}}</span>
+              {{else}}
+              <span>{{$value.Title}}</span>
+              {{end}}
+            </td>
 
             <td>
-              <form method="POST" action="/completeTodo?Id={{$value.ID}}">
-                <button type="submit">Completed</button>
-              </form>
               <form method="POST" action="/deleteTodo?Id={{$value.ID}}">
                 <button type="submit">Delete</button>
               </form>
@@ -44,5 +64,6 @@
         </tbody>
       </table>
     </div>
+    <script></script>
   </body>
 </html>
