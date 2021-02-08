@@ -83,6 +83,8 @@ func completeTodo(w http.ResponseWriter, r *http.Request) {
 
 	mapMake[id[0]].Done = !mapMake[id[0]].Done
 
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+
 	tmp.Execute(w, mapMake)
 
 }
