@@ -48,6 +48,8 @@ func addTodo(w http.ResponseWriter, r *http.Request) {
 
 	mapMake[ramdomID] = &todo{ID: ramdomID, Title: r.FormValue("title"), Done: false}
 
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+
 	tmp.Execute(w, mapMake)
 
 }
@@ -65,6 +67,8 @@ func deleteTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	delete(mapMake, id[0])
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 
 	tmp.Execute(w, mapMake)
 
